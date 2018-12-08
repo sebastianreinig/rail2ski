@@ -11,6 +11,11 @@
 		<script src="assets/js/leaflet.ajax/2.1.0/leaflet.ajax.js"></script>
 		<script src="assets/js/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
 
+
+		<link rel="stylesheet" href="assets/js/leaflet-search-2.9.7/leaflet-search.min.css"/>
+		<link rel="stylesheet" href="assets/js/leaflet-search-2.9.7/leaflet-search.mobile.min.css"/>
+		<script src="assets/js/leaflet-search-2.9.7/leaflet-search.min.js"></script>
+
 		<!--CustomJS-->
 		<script src="assets/js/leaflet_custom.js"></script>
 		<style>
@@ -22,6 +27,25 @@
 		#map {height:100%;
 	            width: 100%;
         	}
+
+.search-tip b {
+	color: #fff;
+}
+.bar.search-tip b,
+.bar.leaflet-marker-icon {
+	background: #f66
+}
+.search-tip {
+	white-space: nowrap;
+}
+.search-tip b {
+	display: inline-block;
+	clear: left;
+	float: right;
+	padding: 0 4px;
+	margin-left: 4px;
+}
+</style>
 		</style>
 </head>
 <body>
@@ -50,6 +74,7 @@
 
 		var v_ski_de = L.markerClusterGroup();
 		map.addLayer(v_ski_de);
+
 		custom_ski_cluster(v_ski_de, './Skigebiete/DE/Skigebiete_DE.geojson');
 
 
@@ -67,7 +92,7 @@
 		custom_ski_cluster(v_ski_ch, './Skigebiete/CH/Skigebiete_CH.geojson');
 
 
-		/*Österreich*/
+		/*ï¿½sterreich*/
 		var v_strecke_at = L.tileLayer('https://api.mapbox.com/styles/v1/orless/cjpfk53u56rdk2sob4s9t7707/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib3JsZXNzIiwiYSI6ImNpaXg4cGt2cTAwMGh2Mm01ZDlqYnk5N28ifQ.EDKxdytV0xTiHyI16K0zsg', {
 			maxZoom: 18
 		}).addTo(map);
@@ -80,6 +105,11 @@
 		map.addLayer(v_ski_at);
 		custom_ski_cluster(v_ski_at, './Skigebiete/AT/Skigebiete_AT.geojson');
 
+		var skigebiete = L.layerGroup([
+			v_ski_de,
+			v_ski_ch,
+		  v_ski_at
+	]);
 
 		var baseLayers = {
 			"OpenStreetMap": background
@@ -96,6 +126,27 @@
 		};
 
 		L.control.layers(baseLayers, overlays).addTo(map);
+
+		var controlSearch = new L.Control.Search({
+				layer: skigebiete,
+				initial: false,
+				zoom: 12,
+				marker: false
+			});
+			map.addControl( controlSearch );
+
+
+/*
+		L.control.search({
+			layer: v_ski_de,
+			initial: false,
+			propertyName: 'name',
+			buildTip: function(text, val) {
+				var type = val.feature.properties.name;
+				return '<a href="#" class="'+type+'">'+text+'<b>'+type+'</b></a>';
+			}
+		})
+		.addTo(map);*/
 	</script>
 </body>
 </html>
