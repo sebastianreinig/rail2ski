@@ -16,6 +16,10 @@
 		<link rel="stylesheet" href="assets/js/leaflet-search-2.9.7/leaflet-search.mobile.min.css"/>
 		<script src="assets/js/leaflet-search-2.9.7/leaflet-search.min.js"></script>
 
+		<!--geojson-vt — GeoJSON Vector Tiles-->
+		<script src="https://unpkg.com/geojson-vt@3.2.0/geojson-vt.js"></script>
+
+
 		<!--CustomJS-->
 		<script src="assets/js/leaflet_custom.js"></script>
 		<style>
@@ -64,13 +68,34 @@
 
 
 		/*Deutschland*/
+
+	/*
 		var v_strecke_de = L.tileLayer('https://api.mapbox.com/styles/v1/orless/cjpfjtsb018kv2rnaq7tu6iux/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib3JsZXNzIiwiYSI6ImNpaXg4cGt2cTAwMGh2Mm01ZDlqYnk5N28ifQ.EDKxdytV0xTiHyI16K0zsg', {
 			maxZoom: 18
 		}).addTo(map);
-		/*
-		var v_strecke_de = L.layerGroup().addTo(map);
+*/
+
+
+// build an initial index of tiles
+$.ajax({
+	url: './Streckennetz/DE/Streckennetz_DE.geojson'
+}).then(function(streckennetz_json) {
+
+var tileIndex = geojsonvt(streckennetz_json);
+// request a particular tile
+var features = tileIndex.getTile(z, x, y).features;
+L.tileLayer(features, {
+	maxZoom: 18
+}).addTo(map);
+
+});
+
+
+
+	/*	var v_strecke_de = L.layerGroup().addTo(map);
 		custom_railway(v_strecke_de, './Streckennetz/DE/Streckennetz_DE.geojson');
 		*/
+
 
 		var v_ski_de = L.markerClusterGroup();
 		map.addLayer(v_ski_de);
@@ -79,14 +104,14 @@
 
 
 		/*Schweiz*/
-		/*
-		var v_strecke_ch = L.tileLayer('https://api.mapbox.com/styles/v1/orless/cjpfkb8voecdi2spj9p6i1n7r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib3JsZXNzIiwiYSI6ImNpaXg4cGt2cTAwMGh2Mm01ZDlqYnk5N28ifQ.EDKxdytV0xTiHyI16K0zsg', {
+
+		var v_strecke_ch = L.tileLayer('https://api.mapbox.com/styles/v1/orless/cjpgva4u13x3l2rrwxwh3x50m/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2ViYXN0aWFucmciLCJhIjoiY2pwZnJ2Y3lyMGQwNDNsbHE5NWU3NWZtNCJ9.03Cma94pxgwWe6K1aP2hcw#9.02/46.7602/8.2075', {
 			maxZoom: 18
 		}).addTo(map);
-		*/
-		var v_strecke_ch = L.layerGroup().addTo(map);
-		custom_railway(v_strecke_ch, './Streckennetz/CH/Streckennetz_CH.geojson');
 
+		/*var v_strecke_ch = L.layerGroup().addTo(map);
+		custom_railway(v_strecke_ch, './Streckennetz/CH/Streckennetz_CH.geojson');
+*/
 		var v_ski_ch = L.markerClusterGroup();
 		map.addLayer(v_ski_ch);
 		custom_ski_cluster(v_ski_ch, './Skigebiete/CH/Skigebiete_CH.geojson');

@@ -1,5 +1,8 @@
 function custom_railway(layer, json){
 
+
+
+
   $.ajax({
     url: json
   }).then(function(streckennetz_json) {
@@ -17,6 +20,7 @@ function custom_railway(layer, json){
             }
       }));
   });
+  
 
 };
 
