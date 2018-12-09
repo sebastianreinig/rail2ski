@@ -77,14 +77,15 @@
 
 
 // build an initial index of tiles
+var v_strecke_de;
 $.ajax({
 	url: './Streckennetz/DE/Streckennetz_DE.geojson'
 }).then(function(streckennetz_json) {
 
 var tileIndex = geojsonvt(streckennetz_json);
 // request a particular tile
-var features = tileIndex.getTile(z, x, y).features;
-L.tileLayer(features, {
+var features = tileIndex;
+v_strecke_de = L.tileLayer(features, {
 	maxZoom: 18
 }).addTo(map);
 
